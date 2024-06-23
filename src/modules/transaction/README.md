@@ -9,7 +9,7 @@ sequenceDiagram
     participant ProductModel
     participant TransactionModel
 
-    Client->>FastifyServer: POST /createTransaction
+    Client->>FastifyServer: POST /transaction
     FastifyServer->>TransactionController: createTransaction(request, reply)
     TransactionController->>TransactionController: createTransactionSchema.safeParse(request.body)
     TransactionController-->>FastifyServer: validation
