@@ -3,55 +3,58 @@
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Controller
+    participant FastifyServer
+    participant UserController
     participant UserModel
     participant AuthUtils
-    participant Database
 
-    Client->>Controller: HTTP POST /createUser { email, password }
-    Controller->>UserModel: findOne({ where: { email } })
-    UserModel->>Database: SELECT * FROM users WHERE email = email
-    Database-->>UserModel: User data
-    UserModel-->>Controller: User instance
-    alt User exists
-        Controller-->>Client: 409 User already exists
-    else User does not exist
-        Controller->>AuthUtils: hashPassword(password)
-        AuthUtils-->>Controller: hashedPassword
-        Controller->>UserModel: create({ email, password: hashedPassword })
-        UserModel->>Database: INSERT INTO users (email, password) VALUES (...)
-        Database-->>UserModel: New user data
-        UserModel-->>Controller: New user instance
-        Controller-->>Client: 201 New user instance
-    end
+    Client->>FastifyServer: POST /register
+    FastifyServer->>UserController: createUser(request, reply)
+    UserController->>UserController: userRegistrationSchema.safeParse(request.body)
+    UserController->>UserController: existingUser(email)
+    UserController->>UserModel: User.findOne({ where: { email } })
+    UserModel-->>UserController: user (or null)
+    UserController-->>UserController: userExists
+    UserController->>AuthUtils: hashPassword(password)
+    AuthUtils-->>UserController: hashedPassword
+    UserController->>UserModel: User.create({ password: hashedPassword, email })
+    UserModel-->>UserController: newUser
+    UserController-->>FastifyServer: reply.status(HttpResponseCodes.CREATED).send(newUser)
+    FastifyServer-->>Client: HTTP 201 Created
 ```
 
 ### Login User
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Controller
+    participant FastifyServer
+    participant UserController
     participant UserModel
     participant AuthUtils
-    participant Database
-    Client->>Controller: HTTP POST /loginUser { email, password }
-    Controller->>UserModel: findOne({ where: { email } })
-    UserModel->>Database: SELECT * FROM users WHERE email = email
-    Database-->>UserModel: User data
-    UserModel-->>Controller: User instance
-    alt User not found
-        Controller-->>Client: 404 User not found
-    else User found
-        Controller->>AuthUtils: comparePassword(password, user.password)
-        AuthUtils-->>Controller: isPasswordValid
-        alt Invalid password
-            Controller-->>Client: 409 Invalid email or password
-        else Valid password
-            Controller->>AuthUtils: generateToken({ id: user.id, username: user.email }, JWT_SECRET)
-            AuthUtils-->>Controller: token
-            Controller-->>Client: 200 { token }
-        end
-    end
+    
+    Client->>FastifyServer: POST /login
+    FastifyServer->>UserController: loginUser(request, reply)
+    UserController->>UserController: userLoginSchema.safeParse(request.body)
+    UserController->>UserModel: User.findOne({ where: { email } })
+    UserModel-->>UserController: user (or null)
+    UserController->>AuthUtils: comparePassword(password, user.password)
+    AuthUtils-->>UserController: isPasswordValid
+    UserController->>UserController: request.jwt.sign(payload)
+    UserController-->>FastifyServer: reply.setCookie('access_token', token).status(HttpResponseCodes.OK).send({ token })
+    FastifyServer-->>Client: HTTP 200 OK
+```
+
+### Logout User
+```mermaid
+sequenceDiagram
+    participant Client
+    participant FastifyServer
+    participant UserController
+    
+    Client->>FastifyServer: DELETE /logout
+    FastifyServer->>UserController: logoutUser(_, reply)
+    UserController-->>FastifyServer: reply.clearCookie('access_token').status(HttpResponseCodes.OK).send('User has been logged out.')
+    FastifyServer-->>Client: HTTP 200 OK
 
 ```
 
@@ -73,8 +76,6 @@ sequenceDiagram
 {
 "id": 1,
 "email": "string",
-"createdAt": "date",
-"updatedAt": "date"
 }
 ```
 
@@ -93,4 +94,16 @@ sequenceDiagram
 {
 "token": "jwt_token_string"
 }
+```
+
+#### Logout User
+- Endpoint: /auth/logout
+- Method: DELETE
+##### Request Body:
+```json
+{}
+```
+##### Response:
+```
+User has been logged out.
 ```

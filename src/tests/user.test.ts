@@ -94,7 +94,7 @@ describe('User Routes', () => {
 
     const cookies = loginResponse.cookies
 
-    // @ts-expect-error
+    // @ts-ignore
     const response = await app.inject({
       method: 'DELETE',
       url: '/logout',
