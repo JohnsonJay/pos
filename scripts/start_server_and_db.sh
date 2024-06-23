@@ -18,7 +18,10 @@ done
 echo "MySQL is ready."
 
 echo "Preparing to start server"
-sleep 5
+for i in {1..5}; do
+  echo -n "."
+  sleep 1
+done
 
 # Start the Fastify server
 echo "Starting POS server..."
