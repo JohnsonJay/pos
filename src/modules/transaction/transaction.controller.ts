@@ -5,7 +5,7 @@ import {
   createTransactionSchema,
   CreateTransactionInput
 } from './transaction.schema'
-import { HttpResponseCodes } from "../../utils/httpResponseCodes";
+import { HttpResponseCodes } from '../../utils/httpResponseCodes'
 
 type ProductsMap = Map<number, number>
 

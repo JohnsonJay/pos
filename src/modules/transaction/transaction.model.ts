@@ -7,7 +7,7 @@ import {
   Model,
   NonAttribute
 } from 'sequelize'
-import sequelize from "../../config/mysql.adapter";
+import sequelize from '../../config/mysql.adapter'
 
 class Transaction extends Model<
 InferAttributes<Transaction, { omit: 'products' }>,

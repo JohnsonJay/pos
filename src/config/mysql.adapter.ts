@@ -4,14 +4,14 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const sequelize = new Sequelize(
-    process.env.DB_NAME!,
-    process.env.DB_USER!,
-    process.env.DB_PASSWORD,
-    {
-        host: 'localhost' as string,
-        dialect: 'mysql',
-        logging: true
-    }
+  process.env.DB_NAME!,
+  process.env.DB_USER!,
+  process.env.DB_PASSWORD,
+  {
+    host: 'localhost' as string,
+    dialect: 'mysql',
+    logging: true
+  }
 )
 
 export default sequelize

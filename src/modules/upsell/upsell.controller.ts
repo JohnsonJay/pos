@@ -3,14 +3,14 @@ import Product from '../product/product.model'
 import { getProduct } from '../product/product.controller'
 import {
   addProductUpsellSchema,
-  deleteProductUpsellSchema,
+  deleteProductUpsellSchema
 } from './upsell.schema'
-import { HttpResponseCodes } from "../../utils/httpResponseCodes";
+import { HttpResponseCodes } from '../../utils/httpResponseCodes'
 
 export const addProductUpsell = async (request: FastifyRequest, reply: FastifyReply) => {
   const validation = addProductUpsellSchema.safeParse(request.body)
   if (!validation.success) {
-    return reply.status( HttpResponseCodes.BAD_REQUEST ).send( validation.error );
+    return await reply.status(HttpResponseCodes.BAD_REQUEST).send(validation.error)
   }
 
   const { productId, relatedProductIds } = validation.data
@@ -30,7 +30,7 @@ export const addProductUpsell = async (request: FastifyRequest, reply: FastifyRe
   }
 }
 
-export const getProductUpsell = async ( request: FastifyRequest, reply: FastifyReply) => {
+export const getProductUpsell = async (request: FastifyRequest, reply: FastifyReply) => {
   // TODO commenting out validation until I think of a plan to parse the data first
 
   // TODO Add Validation
@@ -58,7 +58,7 @@ export const getProductUpsell = async ( request: FastifyRequest, reply: FastifyR
 export const deleteProductUpsell = async (request: FastifyRequest, reply: FastifyReply) => {
   const validation = deleteProductUpsellSchema.safeParse(request.body)
   if (!validation.success) {
-    return reply.status( HttpResponseCodes.BAD_REQUEST ).send( validation.error );
+    return await reply.status(HttpResponseCodes.BAD_REQUEST).send(validation.error)
   }
 
   const { productId, relatedProductId } = validation.data

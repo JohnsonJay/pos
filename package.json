@@ -9,7 +9,8 @@
     "generate-env": "scripts/generate_env.sh",
     "start-db-instance": "scripts/start_docker_mysql.sh",
     "stop-db-instance": "scripts/stop_docker_mysql.sh",
-    "test": "jest"
+    "test": "jest",
+    "lint": "ts-standard --fix"
   },
   "keywords": [],
   "author": "John Johnson",
@@ -25,6 +26,7 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
+    "ts-standard": "^12.0.2",
     "typescript": "^5.5.2"
   },
   "dependencies": {
@@ -40,5 +42,12 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.10.1",
     "zod": "^3.23.8"
+  },
+  "ts-standard": {
+    "ignore": [
+      "dist",
+      "src/**/*.js",
+      "tests"
+    ]
   }
 }

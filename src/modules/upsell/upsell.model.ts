@@ -6,7 +6,7 @@ import {
   Model
 } from 'sequelize'
 import Product from '../product/product.model'
-import sequelize from "../../config/mysql.adapter";
+import sequelize from '../../config/mysql.adapter'
 
 class ProductUpsell extends Model<InferAttributes<ProductUpsell>, InferCreationAttributes<ProductUpsell>> {
   declare productId: ForeignKey<Product['productId']>

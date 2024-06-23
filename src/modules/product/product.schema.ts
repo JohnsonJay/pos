@@ -1,13 +1,13 @@
 import { z } from 'zod'
-import { buildJsonSchemas } from "fastify-zod";
+import { buildJsonSchemas } from 'fastify-zod'
 
 export const addProductSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   // This doesn't validate that the input is a decimal
   price: z.number().positive('Price must be a positive number'),
   description: z.string().optional(),
-  quantity: z.number().int().positive('Quantity must be a positive integer'),
-});
+  quantity: z.number().int().positive('Quantity must be a positive integer')
+})
 
 export const addProductResponseSchema = z.object({
   productId: z.number().int(),
@@ -16,7 +16,7 @@ export const addProductResponseSchema = z.object({
   price: z.number().positive('Price must be a positive number'),
   quantity: z.number().int().positive('Quantity must be a positive integer'),
   updatedAt: z.date(),
-  createdAt: z.date(),
+  createdAt: z.date()
 })
 
 export const productSchema = z.object({
@@ -27,13 +27,13 @@ export const productSchema = z.object({
   quantity: z.number().int().positive('Quantity must be a positive integer'),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional()
-});
+})
 
 export const createProductSchema = productSchema.omit({
   productId: true,
   createdAt: true,
   updatedAt: true
-});
+})
 
 export const createProductResponseSchema = productSchema.omit({
   productId: true,
@@ -56,5 +56,3 @@ export const { schemas: productSchemas, $ref } = buildJsonSchemas({
   addProductSchema,
   addProductResponseSchema
 })
-
-

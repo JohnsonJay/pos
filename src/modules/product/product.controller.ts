@@ -3,18 +3,18 @@ import Product from './product.model'
 import {
   updateProductSchema,
   UpdateProductInput, addProductSchema, AddProductInput
-} from "./product.schema";
-import { HttpResponseCodes } from "../../utils/httpResponseCodes";
+} from './product.schema'
+import { HttpResponseCodes } from '../../utils/httpResponseCodes'
 
 export const getProduct = async (productId: number): Promise<Product | null> => {
   return await Product.findByPk(productId)
 }
 
 export const addProduct = async (
-    request: FastifyRequest<{ Body: AddProductInput }>, reply: FastifyReply) => {
+  request: FastifyRequest<{ Body: AddProductInput }>, reply: FastifyReply) => {
   const validation = addProductSchema.safeParse(request.body)
   if (!validation.success) {
-    return reply.status( HttpResponseCodes.BAD_REQUEST ).send( validation.error );
+    return await reply.status(HttpResponseCodes.BAD_REQUEST).send(validation.error)
   }
 
   const { name, description, price, quantity } = validation.data
@@ -31,7 +31,7 @@ export const getAllProducts = async (request: FastifyRequest, reply: FastifyRepl
   try {
     const allProducts = await Product.findAll()
     if (!allProducts || allProducts.length < 1) {
-      return reply.status(HttpResponseCodes.NOT_FOUND).send({error:  'No products were found.' })
+      return await reply.status(HttpResponseCodes.NOT_FOUND).send({ error: 'No products were found.' })
     }
     // TODO Add Validation
     reply.status(HttpResponseCodes.OK).send(allProducts)
