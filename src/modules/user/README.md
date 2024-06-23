@@ -23,6 +23,26 @@ sequenceDiagram
     FastifyServer-->>Client: HTTP 201 Created
 ```
 
+#### API Details
+- Endpoint: /auth/register
+- Method: POST
+##### Request Body:
+```json
+{
+"email": "string",
+"password": "string"
+}
+```
+
+##### Response:
+```json
+{
+"id": 1,
+"email": "string",
+}
+```
+
+
 ### Login User
 ```mermaid
 sequenceDiagram
@@ -44,6 +64,25 @@ sequenceDiagram
     FastifyServer-->>Client: HTTP 200 OK
 ```
 
+#### API Details
+##### Login User
+- Endpoint: /auth/login
+- Method: POST
+###### Request Body:
+```json
+{
+"email": "string",
+"password": "string"
+}
+```
+###### Response:
+```json
+{
+"token": "jwt_token_string"
+}
+```
+
+
 ### Logout User
 ```mermaid
 sequenceDiagram
@@ -58,45 +97,8 @@ sequenceDiagram
 
 ```
 
-## API Details
-### Authentication Endpoints
-#### Register User
-- Endpoint: /auth/register
-- Method: POST
-##### Request Body:
-```json
-{
-"email": "string",
-"password": "string"
-}
-```
+#### API Details
 
-##### Response:
-```json
-{
-"id": 1,
-"email": "string",
-}
-```
-
-#### Login User
-- Endpoint: /auth/login
-- Method: POST
-##### Request Body:
-```json
-{
-"email": "string",
-"password": "string"
-}
-```
-##### Response:
-```json
-{
-"token": "jwt_token_string"
-}
-```
-
-#### Logout User
 - Endpoint: /auth/logout
 - Method: DELETE
 ##### Request Body:
