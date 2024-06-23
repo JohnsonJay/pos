@@ -17,6 +17,9 @@ do
 done
 echo "MySQL is ready."
 
+echo "Preparing to start server"
+sleep 5
+
 # Start the Fastify server
-echo "Starting Fastify server..."
+echo "Starting POS server..."
 npm run dev
