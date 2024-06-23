@@ -33,10 +33,7 @@ export const getAllProducts = async (request: FastifyRequest, reply: FastifyRepl
     if (!allProducts || allProducts.length < 1) {
       return reply.status(HttpResponseCodes.NOT_FOUND).send({error:  'No products were found.' })
     }
-    // const validation = productsArrayResponseSchema.safeParse(allProducts);
-    // if (!validation.success) {
-    //     return reply.status(HttpResponseCodes.INTERNAL_SERVER_ERROR).send(validation.error);
-    // }
+    // TODO Add Validation
     reply.status(HttpResponseCodes.OK).send(allProducts)
   } catch (error) {
     reply.status(HttpResponseCodes.INTERNAL_SERVER_ERROR).send({ error: 'Unable to get all products.' })
@@ -49,10 +46,7 @@ export const getProductById = async (request: FastifyRequest, reply: FastifyRepl
   try {
     const product = await Product.findByPk(productId)
     if (product != null) {
-      // const validation = productResponseSchema.safeParse(product);
-      // if (!validation.success) {
-      //     return reply.status(500).send(validation.error);
-      // }
+      // TODO Add Validation
       return await reply.status(HttpResponseCodes.OK).send(product)
     }
     reply.status(HttpResponseCodes.NOT_FOUND).send({ error: 'Product not found.' })
@@ -64,9 +58,7 @@ export const getProductById = async (request: FastifyRequest, reply: FastifyRepl
 export const updateProduct = async (request: FastifyRequest, reply: FastifyReply) => {
   const { productId } = request.params as { productId: number }
   const validation = updateProductSchema.safeParse(request.body)
-  // if (!validation.success) {
-  //     return reply.status(400).send(validation.error);
-  // }
+  // TODO Add Validation
 
   const { name, description, price, quantity } = validation.data as UpdateProductInput
 

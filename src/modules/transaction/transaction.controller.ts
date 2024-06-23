@@ -29,6 +29,7 @@ const productsReducer = (
   product: TransactionProductInput
 ): ProductsMap => {
   productsMap.set(product.productId, product.quantity)
+
   explodeUpsellMap(productsMap, product.upsell)
   return productsMap
 }
@@ -50,9 +51,7 @@ const productHasStock = async (
 
 export const createTransaction = async (request: FastifyRequest, reply: FastifyReply) => {
   const validation = createTransactionSchema.safeParse(request.body)
-  // if (!validation.success) {
-  //     return reply.status(HttpResponseCodes.BAD_REQUEST).send(validation.error);
-  // }
+  // TODO Add Validation
 
   const { totalPrice, totalQuantity, products } = validation.data as CreateTransactionInput
 
@@ -104,11 +103,7 @@ export const createTransaction = async (request: FastifyRequest, reply: FastifyR
 }
 
 export const getTransaction = async (request: FastifyRequest, reply: FastifyReply) => {
-  // this schema validation is irritating!
-  // const validation = getTransactionSchema.safeParse(request.params);
-  // if (!validation.success) {
-  //     return reply.status(HttpResponseCodes.BAD_REQUEST).send(validation.error);
-  // }
+  // TODO Add Validation
 
   const { transactionId } = request.params as { transactionId: number }
   try {
@@ -123,10 +118,7 @@ export const getTransaction = async (request: FastifyRequest, reply: FastifyRepl
       return await reply.status(HttpResponseCodes.NOT_FOUND).send({ error: 'Transaction does not exist' })
     }
 
-    // const validationResponse = transactionResponseSchema.safeParse(transaction.toJSON());
-    // if (!validationResponse.success) {
-    //     return reply.status(HttpResponseCodes.INTERNAL_SERVER_ERROR).send(validationResponse.error);
-    // }
+    // TODO Add Validation
 
     reply.status(HttpResponseCodes.OK).send(transaction.toJSON())
   } catch (error) {

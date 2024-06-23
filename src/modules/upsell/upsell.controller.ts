@@ -30,13 +30,10 @@ export const addProductUpsell = async (request: FastifyRequest, reply: FastifyRe
   }
 }
 
-export const getProductUpsells = async (request: FastifyRequest, reply: FastifyReply) => {
+export const getProductUpsell = async ( request: FastifyRequest, reply: FastifyReply) => {
   // TODO commenting out validation until I think of a plan to parse the data first
 
-  // const validation = getProductUpsellsSchema.safeParse(request.params);
-  // if (!validation.success) {
-  //     return reply.status(400).send(validation.error);
-  // }
+  // TODO Add Validation
 
   const { productId } = request.params as { productId: number }
 
@@ -49,10 +46,7 @@ export const getProductUpsells = async (request: FastifyRequest, reply: FastifyR
       return await reply.status(HttpResponseCodes.NOT_FOUND).send({ error: 'Product not found' })
     }
 
-    // const validationResponse = productWithUpsellsResponseSchema.safeParse(productUpsells);
-    // if (!validationResponse.success) {
-    //     return reply.status(500).send(validationResponse.error);
-    // }
+    // TODO Add Validation
 
     reply.status(HttpResponseCodes.OK).send(productUpsells)
   } catch (error) {

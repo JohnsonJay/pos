@@ -1,5 +1,5 @@
 ## Sequence Diagram
-
+### Create User
 ```mermaid
 sequenceDiagram
     participant Client
@@ -24,7 +24,16 @@ sequenceDiagram
         UserModel-->>Controller: New user instance
         Controller-->>Client: 201 New user instance
     end
+```
 
+### Login User
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Controller
+    participant UserModel
+    participant AuthUtils
+    participant Database
     Client->>Controller: HTTP POST /loginUser { email, password }
     Controller->>UserModel: findOne({ where: { email } })
     UserModel->>Database: SELECT * FROM users WHERE email = email

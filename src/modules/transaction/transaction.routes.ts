@@ -6,4 +6,5 @@ export const transactionRoutes = async (fastify: FastifyInstance): Promise<void>
   fastify.post('/', { preHandler: [fastify.authenticate] }, createTransaction);
   // @ts-ignore - TODO FIX ME
   fastify.get('/:transactionId', { preHandler: [fastify.authenticate] }, getTransaction);
+  fastify.log.info('Transaction routes registered');
 }

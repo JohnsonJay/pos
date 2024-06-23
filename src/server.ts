@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
-import { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
+import fastifyJwt from "@fastify/jwt";
 import User from "./modules/user/user.model";
 import sequelize from "./config/mysql.adapter";
 import { mainFastify } from "./index";
@@ -26,15 +27,18 @@ const start = async () => {
         await sequelize.authenticate();
 
         // Synchronise DB Models
-        await User.sync();
-        await Product.sync();
-        await UpsellModel.sync();
-        await Transaction.sync();
-        await TransactionProduct.sync();
+        await Promise.allSettled( [
+            await User.sync(),
+            await Product.sync(),
+            await UpsellModel.sync(),
+            await Transaction.sync(),
+            await TransactionProduct.sync()
+        ]);
+
 
         const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-        await server.listen({ port, host: '0.0.0.0' });
-        console.log('Server listening on http://localhost:3000');
+        await server.listen({ port, host: '127.0.0.1' });
+        console.log(`Server listening on http://127.0.0.1:${port}`);
     } catch (err) {
         server.log.error(err);
         process.exit(1);
