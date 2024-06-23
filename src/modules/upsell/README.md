@@ -4,70 +4,60 @@
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Fastify
+    participant FastifyServer
+    participant UpsellController
     participant ProductController
-    participant Database
+    participant ProductModel
 
-    Client->>Fastify: POST /products/:productId/upsell
-    Fastify->>Fastify: Validate request body
-    alt Validation fails
-        Fastify->>Client: 400 Bad Request, validation.error
-    else Validation succeeds
-        Fastify->>ProductController: getProduct(productId)
-        ProductController->>Database: Product.findByPk(productId)
-        Database-->>ProductController: product or null
-        ProductController-->>Fastify: product or null
-        alt Product found
-            Fastify->>Database: product.addUpsell(relatedProductIds)
-            Database-->>Fastify: updated product
-            Fastify->>Client: 201 Created, updated product
-        else Product not found
-            Fastify->>Client: 404 Not Found, { error: 'Product not found' }
-        end
-    end
-
+    Client->>FastifyServer: POST /upsell
+    FastifyServer->>UpsellController: addProductUpsell(request, reply)
+    UpsellController->>UpsellController: addProductUpsellSchema.safeParse(request.body)
+    UpsellController->>ProductController: getProduct(productId)
+    ProductController->>ProductModel: Product.findByPk(productId)
+    ProductModel-->>ProductController: product (or null)
+    ProductController-->>UpsellController: return product
+    UpsellController->>ProductModel: product.addUpsell(relatedProductIds)
+    ProductModel-->>UpsellController: updated product
+    UpsellController-->>FastifyServer: reply.status(HttpResponseCodes.CREATED).send(updatedProduct)
+    FastifyServer-->>Client: HTTP 201
 ```
 
-### Get Product Upsells
+### Get Product Upsell
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Fastify
-    participant Database
+    participant FastifyServer
+    participant UpsellController
+    participant ProductModel
 
-    Client->>Fastify: GET /products/:productId/upsell
-    Fastify->>Fastify: Extract productId from request params
-    Fastify->>Database: Product.findByPk(productId, { include: [{ model: Product, as: 'upsell' }] })
-    Database-->>Fastify: productUpsells or null
-    alt Product upsells found
-        Fastify->>Client: 200 OK, productUpsells
-    else Product upsells not found
-        Fastify->>Client: 404 Not Found, { error: 'Product not found' }
-    end
-
+    Client->>FastifyServer: GET /upsell/:productId
+    FastifyServer->>UpsellController: getProductUpsell(request, reply)
+    UpsellController->>UpsellController: request.params.productId
+    UpsellController->>ProductModel: Product.findByPk(productId, { include: [{ model: Product, as: 'upsell' }] })
+    ProductModel-->>UpsellController: productUpsells (or null)
+    UpsellController-->>FastifyServer: reply.status(HttpResponseCodes.OK).send(productUpsells)
+    FastifyServer-->>Client: HTTP 200
 ```
 
 ### Delete Product Upsell
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Fastify
-    participant Database
+    participant FastifyServer
+    participant UpsellController
+    participant ProductController
+    participant ProductModel
 
-    Client->>Fastify: DELETE /products/:productId/upsell
-    Fastify->>Fastify: Validate request body
-    alt Validation fails
-        Fastify->>Client: 400 Bad Request, validation.error
-    else Validation succeeds
-        Fastify->>Database: Product.findByPk(productId)
-        Database-->>Fastify: product or null
-        alt Product found
-            Fastify->>Database: product.removeUpsell(relatedProductId)
-            Database-->>Fastify: Success
-            Fastify->>Client: 200 OK, { message: 'Product upsell removed' }
-        else Product not found
-            Fastify->>Client: 404 Not Found, { error: 'Product upsell not found' }
-        end
-    end
+    Client->>FastifyServer: DELETE /upsell
+    FastifyServer->>UpsellController: deleteProductUpsell(request, reply)
+    UpsellController->>UpsellController: deleteProductUpsellSchema.safeParse(request.body)
+    UpsellController->>ProductController: getProduct(productId)
+    ProductController->>ProductModel: Product.findByPk(productId)
+    ProductModel-->>ProductController: product (or null)
+    ProductController-->>UpsellController: return product
+    UpsellController->>ProductModel: product.removeUpsell(relatedProductId)
+    ProductModel-->>UpsellController: updated product
+    UpsellController-->>FastifyServer: reply.status(HttpResponseCodes.OK).send(`Product ${relatedProductId} has been removed from upsell`)
+    FastifyServer-->>Client: HTTP 200
 
 ```
