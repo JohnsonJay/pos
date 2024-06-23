@@ -81,3 +81,18 @@ This command is used to stop and remove the MySQL image.
 ```npm
 npm run stop-db-instance
 ```
+
+###  API Endpoints
+The logic has been abstracted in to 4 separate modules, and each module contains a README with information regarding the sequence of events
+when an endpoint has been hit, and expected responses:
+
+## Documentation
+
+#### Auth Module
+[Auth README](src/modules/user/README.md)
+#### Product Module
+[Product README](src/modules/product/README.md)
+#### Upsell Module
+[Upsell README](src/modules/upsell/README.md)
+#### Transaction Module
+[Transaction README](src/modules/transaction/README.md)
