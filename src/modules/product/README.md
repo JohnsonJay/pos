@@ -159,12 +159,12 @@ sequenceDiagram
 ##### Response:
 ```json
 {
-	"productId": 1,
+    "productId": 1, 
     "name": "red apple",
     "price": "16.00",
     "description": "sweet red apple",
     "quantity": 3,
-	"updatedAt": "2024-06-23T10:07:17.474Z",
-	"createdAt": "2024-06-23T10:07:17.474Z"
+    "updatedAt": "2024-06-23T10:07:17.474Z",
+    "createdAt": "2024-06-23T10:07:17.474Z"
 }
 ```
